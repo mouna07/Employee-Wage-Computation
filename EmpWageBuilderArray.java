@@ -1,25 +1,27 @@
-public class EmpWageBuilderArray {
+import java.util.LinkedList;
+public class EmpWageBuilderArray implements EmpWageCalculation {
     public static final int IS_PART_TIME = 1;
     public static final int IS_FULL_TIME = 2;
 
     // Variables
-    private int numOfCompany = 0;
-    private CompanyEmpWage[] companyEmpWageArray;
+    private LinkedList<CompanyEmpWage> companyEmpWageList;
 
     // Constructer
-    public EmpWageBuilderArray() {
-        companyEmpWageArray = new CompanyEmpWage[5];
+    public EmpWageBuilderArray(int n) {
+        companyEmpWageList = new LinkedList<>();
     }
 
-    private void addCompanyEmpWage(String company, int empRatePerHr, int noOfWorkingDays, int maxHrsPeronth) {
-        companyEmpWageArray[numOfCompany] = new CompanyEmpWage(company, empRatePerHr, noOfWorkingDays, maxHrsPeronth);
-        numOfCompany++;
+    public void addCompanyEmpWage(String company, int empRatePerHr, int noOfWorkingDays, int maxHrsPeronth) {
+        CompanyEmpWage companyEmpWage = new CompanyEmpWage(company, empRatePerHr, noOfWorkingDays, maxHrsPeronth);
+        companyEmpWageList.add(companyEmpWage);
     }
 
-    private void computeEmpWage() {
-        for (int i = 0; i < numOfCompany; i++) {
-            companyEmpWageArray[i].setTotalEmpWage(this.computeEmpWage(companyEmpWageArray[i]));
-            System.out.println(companyEmpWageArray[i]);
+    public void computeEmpWage() {
+
+        for (int i = 0; i < companyEmpWageList.size(); i++) {
+            CompanyEmpWage companyEmpWage = companyEmpWageList.get(i);
+            companyEmpWage.setTotalEmpWage(this.computeEmpWage(companyEmpWage));
+            System.out.println(companyEmpWage);
         }
     }
 
@@ -27,11 +29,11 @@ public class EmpWageBuilderArray {
     public int computeEmpWage(CompanyEmpWage companyEmpWage) {
         // Variables
         int empHrs = 0;
-        int totalEmpWage = 0;
         int totalWorkingDays = 0;
         int totalEmpHrs = 0;
 
         // Computation
+        System.out.println("Calculating Wage for Company: " + companyEmpWage.company);
         while (totalEmpHrs <= companyEmpWage.maxHrsPeronth && totalWorkingDays < companyEmpWage.noOfWorkingDays) {
             totalWorkingDays++;
             int empCheck = (int) Math.floor(Math.random() * 10) % 3;
@@ -52,20 +54,5 @@ public class EmpWageBuilderArray {
         } // End While
         return totalEmpHrs * companyEmpWage.empRatePerHr;
     } // End computeEmpWage
-
-    public static void main(String[] args) throws Exception {
-
-        // Welcome message
-        System.out.println("Welcome to Employee Wedge Builder...");
-        System.out.println("************************************\n");
-
-        // Objects
-        EmpWageBuilderArray empWageBuilder = new EmpWageBuilderArray();
-        empWageBuilder.addCompanyEmpWage("Dmart", 20, 2, 10);
-        empWageBuilder.addCompanyEmpWage("Reliance", 10, 4, 20);
-
-        // Method calls
-        empWageBuilder.computeEmpWage();
-
-    }// End main
 }// End class EmpWageBuilder
+
